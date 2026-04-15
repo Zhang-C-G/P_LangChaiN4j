@@ -1,5 +1,7 @@
 package com.example.interviewassistant.controller;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -12,15 +14,22 @@ import java.time.Instant;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
-@WebMvcTest(InterviewController.class)
+@WebMvcTest(
+        controllers = InterviewController.class,
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = com.example.interviewassistant.security.JwtAuthenticationFilter.class
+        )
+)
+@AutoConfigureMockMvc(addFilters = false)
 class InterviewControllerTest {
 
     @Autowired
@@ -58,9 +67,9 @@ class InterviewControllerTest {
 
         String body = """
                 {
-                  "role": "Java后端工程师",
+                  "role": "Java Backend Engineer",
                   "seniority": "Senior",
-                  "topics": ["缓存", "并发"],
+                  "topics": ["cache", "concurrency"],
                   "questionCount": 1
                 }
                 """;
@@ -79,17 +88,17 @@ class InterviewControllerTest {
                 .thenReturn(new EvaluateAnswerResponse(
                         8,
                         10,
-                        List.of("结构清晰"),
-                        List.of("缺少量化指标"),
-                        "补充指标",
+                        List.of("clear structure"),
+                        List.of("missing metrics"),
+                        "add measurable metrics",
                         "rule-based"
                 ));
 
         String body = """
                 {
-                  "question": "如何提升接口性能？",
-                  "candidateAnswer": "我会先做性能分析，再缓存热点数据。",
-                  "expectedSignals": ["性能分析", "缓存", "监控"]
+                  "question": "How do you improve API performance?",
+                  "candidateAnswer": "I first profile, then cache hot keys, and monitor latency.",
+                  "expectedSignals": ["profiling", "cache", "monitoring"]
                 }
                 """;
 

@@ -4,6 +4,7 @@
 
 - 生成岗位定制化面试题
 - 评估候选人回答质量
+- JWT 登录鉴权，保护业务接口
 - 支持 `LangChain4j(OpenAI)` 与 `Rule-Based` 双 Provider 切换
 
 ## 1. 技术栈
@@ -18,6 +19,7 @@
 
 - 分层架构清晰：`controller -> service -> ai-client`
 - 生产可用的健壮性：参数校验、统一异常处理、AI 调用失败自动回退
+- 安全基线：JWT 鉴权、受保护 API、401 访问控制测试
 - 工程化能力：可配置 Provider、单元测试、Docker 化
 - 可扩展：后续可挂接 RAG、向量数据库、审计日志、鉴权体系
 
@@ -40,6 +42,21 @@ app:
   ai:
     provider: openai
 ```
+
+### 登录获取 Token
+
+`POST /api/v1/auth/login`
+
+```json
+{
+  "username": "admin",
+  "password": "admin123"
+}
+```
+
+后续请求在 Header 中携带：
+
+`Authorization: Bearer <accessToken>`
 
 ### 运行测试
 

@@ -12,3 +12,11 @@ app:
       api-key: ${OPENAI_API_KEY:}
       model: gpt-4o-mini
       temperature: 0.3
+  security:
+    jwt:
+      # Base64("interview-assistant-demo-jwt-secret-key-2026")
+      secret-base64: aW50ZXJ2aWV3LWFzc2lzdGFudC1kZW1vLWp3dC1zZWNyZXQta2V5LTIwMjY=
+      expiration-seconds: 3600
+    demo-user:
+      username: admin
+      password: admin123
