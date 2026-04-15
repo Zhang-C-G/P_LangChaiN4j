@@ -5,6 +5,7 @@
 - 生成岗位定制化面试题
 - 评估候选人回答质量
 - JWT 登录鉴权，保护业务接口
+- PostgreSQL 持久化面试记录（Flyway 管理表结构）
 - 支持 `LangChain4j(OpenAI)` 与 `Rule-Based` 双 Provider 切换
 
 ## 1. 技术栈
@@ -20,7 +21,7 @@
 - 分层架构清晰：`controller -> service -> ai-client`
 - 生产可用的健壮性：参数校验、统一异常处理、AI 调用失败自动回退
 - 安全基线：JWT 鉴权、受保护 API、401 访问控制测试
-- 工程化能力：可配置 Provider、单元测试、Docker 化
+- 工程化能力：可配置 Provider、数据库迁移、单元测试、Docker 化
 - 可扩展：后续可挂接 RAG、向量数据库、审计日志、鉴权体系
 
 ## 3. 快速启动
@@ -58,6 +59,15 @@ app:
 
 `Authorization: Bearer <accessToken>`
 
+默认使用内存 H2（便于本地零配置启动）。  
+如需使用 PostgreSQL，可启用 profile：
+
+```bash
+mvn spring-boot:run -Dspring-boot.run.profiles=postgres
+```
+
+并配置环境变量：`DB_URL`、`DB_USERNAME`、`DB_PASSWORD`。
+
 ### 运行测试
 
 ```bash
@@ -91,7 +101,15 @@ mvn test
 }
 ```
 
-## 5. 目录结构
+## 5. 数据落库说明
+
+- 表名：`interview_records`
+- 迁移脚本：`src/main/resources/db/migration/V1__create_interview_records.sql`
+- 在以下场景自动记录请求与响应：
+  - 生成面试题
+  - 评估候选人回答
+
+## 6. 目录结构
 
 ```text
 src/main/java/com/example/interviewassistant
@@ -104,7 +122,7 @@ src/main/java/com/example/interviewassistant
 └─ InterviewAssistantApplication.java
 ```
 
-## 6. 后续可扩展方向
+## 7. 后续可扩展方向
 
 - 接入 PostgreSQL 存储面试记录与评分历史
 - 加入 Spring Security + JWT 鉴权
