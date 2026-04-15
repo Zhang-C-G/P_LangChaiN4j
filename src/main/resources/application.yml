@@ -31,3 +31,7 @@ app:
     demo-user:
       username: admin
       password: admin123
+  rate-limit:
+    enabled: true
+    max-requests: 60
+    window-seconds: 60
