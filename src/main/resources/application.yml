@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: interview-assistant
+
+app:
+  ai:
+    provider: rule
+    openai:
+      api-key: ${OPENAI_API_KEY:}
+      model: gpt-4o-mini
+      temperature: 0.3
